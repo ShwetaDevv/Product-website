@@ -235,25 +235,25 @@ const Products = () => {
   const pageNumbers = [...Array(totalPages).keys()].map(num => num + 1);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-400 p-8">
       <div className="flex justify-center items-center">
-      {user && <p className="text-center text-xl m-2 ">Logged in as: {user.user.sub}</p>}
+      {user && <p className="text-center text-xl m-2 font-bold">Logged in as: {user.user.sub}</p>}
     </div>
       <input
         type="text"
         placeholder="Search products..."
         value={searchQuery}
         onChange={handleSearchChange}
-        className="block mb-4 p-2 border rounded w-full"
+        className="block mb-4 p-2  rounded w-full border-2 border-black"
       />
       {filteredProducts.length === 0 ?(
         <p className="text-center text-lg font-semibold mt-8">No data found</p>
       ):(
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 ">
         {currentProducts.map(product => (
-          <div key={product.id} className="bg-white p-4 rounded shadow-md">
-            <img src={product.thumbnail} alt={product.title} className="w-full h-48 object-cover mb-2 rounded"/>
-            <p className="text-lg font-bold end-12 text-red-500 transform ">{`$${product.price.toFixed(2)}`}</p>
+          <div key={product.id} className="bg-white p-4  shadow-md rounded-2xl border-2 border-black">
+            <img src={product.thumbnail} alt={product.title} className="w-full h-48 object-cover mb-2 rounded "/>
+            <p className="text-lg font-bold end-12 text-red-500 transform py-8">{`$${product.price.toFixed(2)}`}</p>
             <h3 className="text-lg font-semibold">{product.title}</h3>
           </div>
         ))}
