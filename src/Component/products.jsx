@@ -34,10 +34,6 @@ const Products = () => {
           }
         });
 
-        // if (!userResponse.ok) {
-        //   throw new Error(`User fetch error: ${userResponse.statusText}`);
-        // }
-
         const userData = await userResponse.json();
         setUser(userData.user);
 
@@ -110,14 +106,16 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gray-400 p-8">
-      <div className="flex justify-center items-center ">
-        <p className="text-center text-xl m-2 font-bold">
-          Logged in as: {user ? user.sub : 'Loading...'}
-        </p>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex-1 text-center">
+          <p className="text-xl font-bold">
+            Logged in as: {user ? user.sub : 'Loading...'}
+          </p>
+        </div>
         { (
           <button
             onClick={handleLogout}
-            className="ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             Logout
           </button>
