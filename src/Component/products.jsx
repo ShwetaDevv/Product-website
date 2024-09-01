@@ -4,45 +4,62 @@ const Products = () => {
   // Retrieve and parse the token from localStorage
   const storedUser = localStorage.getItem("user");
   const authtoken = storedUser ? JSON.parse(storedUser).token : null;
+  
+  // State variables
   const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const productsPerPage = 8;
 
-  // Fetch product data from API
+  // Fetch product and user data from API
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndUser = async () => {
       if (!authtoken) {
+        window.location.href = '/login';
         setError('No authentication token found');
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch('https://intern-task-api.bravo68web.workers.dev/api/products', {
+        // Fetch user data
+        const userResponse = await fetch('https://intern-task-api.bravo68web.workers.dev/auth/login', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${authtoken}`, // Adjust if `Token` is the correct prefix
+            'Authorization': `Bearer ${authtoken}`,
             'Content-Type': 'application/json'
           }
         });
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Unauthorized: Check your API token or credentials.');
-          } else {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+        // if (!userResponse.ok) {
+        //   throw new Error(`User fetch error: ${userResponse.statusText}`);
+        // }
+
+        const userData = await userResponse.json();
+        setUser(userData.user);
+
+        // Fetch product data
+        const productResponse = await fetch('https://intern-task-api.bravo68web.workers.dev/api/products', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authtoken}`,
+            'Content-Type': 'application/json'
           }
+        });
+
+        if (!productResponse.ok) {
+          throw new Error(`Product fetch error: ${productResponse.statusText}`);
         }
 
-        const data = await response.json();
+        const productData = await productResponse.json();
 
-        if (Array.isArray(data)) {
-          setProducts(data);
+        if (Array.isArray(productData)) {
+          setProducts(productData);
         } else {
-          throw new Error('Invalid data format');
+          throw new Error('Invalid product data format');
         }
       } catch (error) {
         setError(error.message);
@@ -51,8 +68,8 @@ const Products = () => {
       }
     };
 
-    fetchProducts();
-  }, [authtoken]); // Dependency array includes authtoken
+    fetchProductsAndUser();
+  }, [authtoken]);
 
   // Filter products based on search query
   const filteredProducts = products.filter(product =>
@@ -88,7 +105,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-gray-400 p-8">
       <div className="flex justify-center items-center">
-        <p className="text-center text-xl m-2 font-bold">Logged in as: hi@b68.dev</p>
+        <p className="text-center text-xl m-2 font-bold">Logged in as: {user ? user.sub : 'Loading...'}</p>
       </div>
       <input
         type="text"
