@@ -102,10 +102,26 @@ const Products = () => {
 
   const pageNumbers = [...Array(totalPages).keys()].map(num => num + 1);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  };
+
   return (
     <div className="min-h-screen bg-gray-400 p-8">
-      <div className="flex justify-center items-center">
-        <p className="text-center text-xl m-2 font-bold">Logged in as: {user ? user.sub : 'Loading...'}</p>
+      <div className="flex justify-center items-center ">
+        <p className="text-center text-xl m-2 font-bold">
+          Logged in as: {user ? user.sub : 'Loading...'}
+        </p>
+        { (
+          <button
+            onClick={handleLogout}
+            className="ml-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Logout
+          </button>
+        )}
       </div>
       <input
         type="text"
